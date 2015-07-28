@@ -61,4 +61,5 @@ dependencies: \
   /Users/yusun/Repositories/MyProjects/OpenGL\ Tutorial/OpenGL-tutorial_v0014_21/external/glm-0.9.4.0/glm/./core/func_integer.hpp \
   /Users/yusun/Repositories/MyProjects/OpenGL\ Tutorial/OpenGL-tutorial_v0014_21/external/glm-0.9.4.0/glm/core/func_integer.inl \
   /Users/yusun/Repositories/MyProjects/OpenGL\ Tutorial/OpenGL-tutorial_v0014_21/external/glm-0.9.4.0/glm/./core/func_noise.hpp \
-  /Users/yusun/Repositories/MyProjects/OpenGL\ Tutorial/OpenGL-tutorial_v0014_21/external/glm-0.9.4.0/glm/core/func_noise.inl
+  /Users/yusun/Repositories/MyProjects/OpenGL\ Tutorial/OpenGL-tutorial_v0014_21/external/glm-0.9.4.0/glm/core/func_noise.inl \
+  /Users/yusun/Repositories/MyProjects/OpenGL\ Tutorial/OpenGL-tutorial_v0014_21/common/shader.hpp
