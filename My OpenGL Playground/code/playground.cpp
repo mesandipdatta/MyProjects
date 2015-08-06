@@ -44,7 +44,7 @@ const char * vert = GLSL(120,
 const char * frag = GLSL(120,
                          
     void main(){
-        gl_FragColor = vec4(1.0,0.0,0.0,1.0);
+        gl_FragColor = vec4(1.0,1.0,1.0,1.0);
     }
 );
 
@@ -71,7 +71,11 @@ struct MyApp : public App{
         
         GLfloat verts[] =
         {
-            +0.0f, +1.0f,
+            +0.0f, +0.0f,
+            +1.0f, +1.0f,
+            -1.0f, +1.0f,
+            
+            +0.0f, +0.0f,
             -1.0f, -1.0f,
             +1.0f, -1.0f,
         };
@@ -101,7 +105,7 @@ struct MyApp : public App{
          *-----------------------------------------------------------------------------*/
         glEnableVertexAttribArray(positionID);
         // Tell OpenGL how to handle the buffer of data that is already on the GPU
-        glVertexAttribPointer(positionID, 2, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT) * 2, 0);
+        glVertexAttribPointer(positionID, 2, GL_FLOAT, GL_FALSE, 0, 0);
         
         // Unbind Everything (NOTE: unbind the vertex array object first)
         BINDVERTEXARRAY(0);
@@ -113,7 +117,7 @@ struct MyApp : public App{
     void onDraw(){
         shader->bind();
         BINDVERTEXARRAY(arrayID);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
         BINDVERTEXARRAY(0);
     }
 
