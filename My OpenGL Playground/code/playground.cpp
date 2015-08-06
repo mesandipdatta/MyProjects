@@ -59,7 +59,7 @@ struct MyApp : public App{
     GLuint positionID;
     
     //A buffer ID
-    GLuint bufferID;
+    GLuint vertexBufferID, indexBufferID;
     
     //An array ID
     GLuint arrayID;
@@ -71,13 +71,12 @@ struct MyApp : public App{
         
         GLfloat verts[] =
         {
-            +0.0f, +0.0f,
-            +1.0f, +1.0f,
-            -1.0f, +1.0f,
-            
-            +0.0f, +0.0f,
-            -1.0f, -1.0f,
-            +1.0f, -1.0f,
+            +0.0f, +0.0f,   // 0
+            +1.0f, +1.0f,   // 1
+            -1.0f, +1.0f,   // 2
+//            +0.0f, +0.0f,
+            -1.0f, -1.0f,   // 3
+            +1.0f, -1.0f,   // 4
         };
         
         /*-----------------------------------------------------------------------------
@@ -96,8 +95,8 @@ struct MyApp : public App{
         /*-----------------------------------------------------------------------------
          *  CREATE THE VERTEX BUFFER OBJECT
          *-----------------------------------------------------------------------------*/
-        glGenBuffers(1, &bufferID);
-        glBindBuffer(GL_ARRAY_BUFFER, bufferID);
+        glGenBuffers(1, &vertexBufferID);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
         glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
         
         /*-----------------------------------------------------------------------------
@@ -107,17 +106,25 @@ struct MyApp : public App{
         // Tell OpenGL how to handle the buffer of data that is already on the GPU
         glVertexAttribPointer(positionID, 2, GL_FLOAT, GL_FALSE, 0, 0);
         
+        GLushort indices[] = {0, 1, 2, 0, 3, 4};
+        /*-----------------------------------------------------------------------------
+         *  CREATE THE ELEMENT ARRAY BUFFER OBJECT
+         *-----------------------------------------------------------------------------*/
+        glGenBuffers(1, &indexBufferID);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW );
+        
         // Unbind Everything (NOTE: unbind the vertex array object first)
         BINDVERTEXARRAY(0);
-        glBindBuffer( GL_ARRAY_BUFFER, 0);
-        glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         shader->unbind();
     }
 
     void onDraw(){
         shader->bind();
         BINDVERTEXARRAY(arrayID);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
         BINDVERTEXARRAY(0);
     }
 
