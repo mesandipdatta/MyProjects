@@ -25,7 +25,7 @@
 
 #include <stdint.h>
 
-namespace lynda {
+namespace playground {
 
 
 struct Bitmap{
@@ -87,6 +87,6 @@ struct Bitmap{
 
 };
 
-} //lynda::
+} //playground::
 
 #endif   /* ----- #ifndef gl_data_INC  ----- */

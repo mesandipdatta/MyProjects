@@ -21,7 +21,7 @@
 
 #include <math.h>
 
-namespace lynda{
+namespace playground{
 
 #ifndef PI
 #define PI (float)3.14159265359

@@ -31,7 +31,7 @@
 #include "glm/gtx/quaternion.hpp"
 
 
-namespace lynda{
+namespace playground{
 /*-----------------------------------------------------------------------------
  *  VERTEX DATA 
  *-----------------------------------------------------------------------------*/
@@ -145,7 +145,7 @@ struct Mesh{
   
 };
 
-} //lynda::
+} //playground::
 
 
 #endif   /* ----- #ifndef gl_mesh_INC  ----- */

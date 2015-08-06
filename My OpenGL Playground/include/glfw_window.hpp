@@ -1,7 +1,7 @@
 /*
  * =====================================================================================
  *
- *       Filename:  lynda_window.h
+ *       Filename:  playground_window.h
  *
  *    Description:  a window wrapper around glfwWindow
  *
@@ -11,20 +11,20 @@
  *       Compiler:  gcc
  *
  *         Author:  Pablo Colapinto 
- *   Organization: lynda.com 
+ *   Organization: playground.com 
  *
  * =====================================================================================
  */
 
-#ifndef LYNDA_WINDOW_H_INCLUDED
-#define LYNDA_WINDOW_H_INCLUDED
+#ifndef playground_WINDOW_H_INCLUDED
+#define playground_WINDOW_H_INCLUDED
 
 #include "gl_lib.hpp"
 #include <iostream>
 
 
 using namespace std;
-namespace lynda{
+namespace playground{
 
 
 /*-----------------------------------------------------------------------------
@@ -121,6 +121,6 @@ struct Window {
     }
 };
 
-} //lynda
+} //playground
 
 #endif

@@ -11,13 +11,13 @@
  *       Compiler:  gcc
  *
  *         Author:  Pablo Colapinto (), gmail -> wolftype
- *   Organization:  lynda.com 
+ *   Organization:  playground.com 
  *
  * =====================================================================================
  */
 
 
-namespace lynda {
+namespace playground {
 
     class Shader {
         
@@ -118,4 +118,4 @@ namespace lynda {
 
 
 
-} //lynda::
+} //playground::

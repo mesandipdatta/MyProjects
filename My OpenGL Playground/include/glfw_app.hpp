@@ -21,7 +21,7 @@
 #include "glfw_window.hpp" //<-- Our GLFW Window
 
 
-namespace lynda {
+namespace playground {
 
 struct App{
 
@@ -106,7 +106,7 @@ struct App{
     virtual void onKeyDown(int key, int action){}
 };
 
-} //lynda::
+} //playground::
 
 
 #endif   /* ----- #ifndef glut_app_INC  ----- */

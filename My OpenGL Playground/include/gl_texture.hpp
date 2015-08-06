@@ -19,7 +19,7 @@
  */
 
 
-namespace lynda {
+namespace playground {
 
   struct Texture {
 
