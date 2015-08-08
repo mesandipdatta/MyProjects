@@ -72,11 +72,16 @@ struct MyApp : public App{
         GLfloat verts[] =
         {
             +0.0f, +0.0f,   // 0
+            +1.0, +0.0, +0.0,
             +1.0f, +1.0f,   // 1
+            +1.0, +0.0, +0.0,
             -1.0f, +1.0f,   // 2
+            +1.0, +0.0, +0.0,
 //            +0.0f, +0.0f,
             -1.0f, -1.0f,   // 3
+            +1.0, +0.0, +0.0,
             +1.0f, -1.0f,   // 4
+            +1.0, +0.0, +0.0,
         };
         
         /*-----------------------------------------------------------------------------
@@ -104,7 +109,10 @@ struct MyApp : public App{
          *-----------------------------------------------------------------------------*/
         glEnableVertexAttribArray(positionID);
         // Tell OpenGL how to handle the buffer of data that is already on the GPU
-        glVertexAttribPointer(positionID, 2, GL_FLOAT, GL_FALSE, 0, 0);
+        // stride, 0 means pack together
+        glVertexAttribPointer(positionID, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, 0);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (char*)(sizeof(float) * 2));
         
         GLushort indices[] = {0, 1, 2, 0, 3, 4};
         /*-----------------------------------------------------------------------------
