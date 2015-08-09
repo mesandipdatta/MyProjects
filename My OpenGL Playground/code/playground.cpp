@@ -35,16 +35,22 @@ using namespace std;
 const char * vert = GLSL(120,
                          
     attribute vec4 position;
-                         
+    attribute vec4 color;
+
+    varying vec4 dstColor;
+
     void main(){
         gl_Position = position;
+        dstColor = color;
     }
 );
 
 const char * frag = GLSL(120,
                          
+    varying vec4 dstColor;
+
     void main(){
-        gl_FragColor = vec4(1.0,1.0,1.0,1.0);
+        gl_FragColor = dstColor;
     }
 );
 
@@ -56,7 +62,7 @@ struct MyApp : public App{
     Shader * shader;
     
     //ID of Vertex Attribute
-    GLuint positionID;
+    GLuint positionID, colorID;
     
     //A buffer ID
     GLuint vertexBufferID, indexBufferID;
@@ -90,6 +96,7 @@ struct MyApp : public App{
         shader = new Shader( vert, frag );
         // Get attribute locations
         positionID = glGetAttribLocation(shader -> id(), "position");
+        colorID = glGetAttribLocation(shader->id(), "color");
         
         /*-----------------------------------------------------------------------------
          *  CREATE THE VERTEX ARRAY OBJECT
@@ -111,8 +118,8 @@ struct MyApp : public App{
         // Tell OpenGL how to handle the buffer of data that is already on the GPU
         // stride, 0 means pack together
         glVertexAttribPointer(positionID, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, 0);
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (char*)(sizeof(float) * 2));
+        glEnableVertexAttribArray(colorID);
+        glVertexAttribPointer(colorID, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (char*)(sizeof(float) * 2));
         
         GLushort indices[] = {0, 1, 2, 0, 3, 4};
         /*-----------------------------------------------------------------------------
