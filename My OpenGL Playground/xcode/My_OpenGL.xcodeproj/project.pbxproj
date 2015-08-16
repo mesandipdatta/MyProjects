@@ -581,6 +581,7 @@
 		02AA72C6517E413D93C18A4F /* getopt.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = getopt.c; path = glfw/deps/getopt.c; sourceTree = SOURCE_ROOT; };
 		043B5ADA80C04B119CFE71C6 /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; name = CMakeLists.txt; path = glfw/tests/CMakeLists.txt; sourceTree = SOURCE_ROOT; };
 		05BAB46FB5BF483A8D6718A1 /* title.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; path = title.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		085A41421B7895FE0005ABA7 /* include */ = {isa = PBXFileReference; lastKnownFileType = folder; path = include; sourceTree = "<group>"; };
 		0B6F4EE8F2B947949890F7DD /* modes.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = modes.c; path = glfw/tests/modes.c; sourceTree = SOURCE_ROOT; };
 		0DE8D56B03CA4BC6B30DFE13 /* title.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = title.c; path = glfw/tests/title.c; sourceTree = SOURCE_ROOT; };
 		0EADA51E676242B09B889AA0 /* threads.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = threads.c; path = glfw/tests/threads.c; sourceTree = SOURCE_ROOT; };
@@ -1139,6 +1140,7 @@
 		9E5EB31834084DFB9CC29AD5 = {
 			isa = PBXGroup;
 			children = (
+				085A41421B7895FE0005ABA7 /* include */,
 				47E833D7140E43D49CADAE78 /* Sources */,
 				90D50765A44A448AA6BF24E0 /* Resources */,
 				638F39BA378D4F4B9EC76F5F /* Products */,

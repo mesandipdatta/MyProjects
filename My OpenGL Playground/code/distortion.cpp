@@ -94,70 +94,39 @@ public:
 };
 
 /*-----------------------------------------------------------------------------
- *  DISTORTION SHADER CODE
- *-----------------------------------------------------------------------------*/
-const char * distortVert = GLSL(120,
-                         
-    attribute vec2 position;
-    attribute float vignette;
-    attribute vec2 textureCoordinate;                   //<-- Texture Coordinate Attribute
-                         
-    varying vec2 texCoord;                              //<-- To be passed to fragment shader
-                         
-    void main(void){
-        texCoord = textureCoordinate;
-                             
-        gl_Position = vec4(position, 0, 1);
-    }
-                
-);
-
-const char * distortFrag = GLSL(120,
-                         
-    varying vec2 texCoord;                            //<-- coordinate passed in from vertex shader
-                         
-    uniform sampler2D texture;                        //<-- The texture itself
-                         
-    void main(void){
-        gl_FragColor =  texture2D( texture, texCoord ); //<-- look up the coordinate
-    }
-                         
-);
-
-/*-----------------------------------------------------------------------------
  *  DISTORTION MESH
  *-----------------------------------------------------------------------------*/
 class DistortionMesh {
-    int ROWS = 40;
-    int COLS = 40;
+    const static int ROWS = 40;
+    const static int COLS = 40;
     
-    int nIndices;
     GLuint mArrayBufferId = -1;
     GLuint mElementBufferId = -1;
+    
+    GLfloat vertexData[ROWS * COLS * 5];
+    GLuint indexData[ROWS * COLS * 2];
     
     Distortion distortion;
     
 public:
-    DistortionMesh() {
-    }
+    DistortionMesh() {}
     
-    DistortionMesh(Window mWindow) {
-        cout << "create the DistortionMesh" << endl;
-        
-        GLfloat vertexData[ROWS * COLS * 5];
+    DistortionMesh(Window* mWindow) {}
+    
+    DistortionMesh(int width, int height) {
         int vertexOffset = 0;
         float scale = 500.0f;
         
-        float xEyeOffsetMScreen = mWindow.width() / 2.0f;
-        float yEyeOffsetMScreen = mWindow.height() / 2.0f;
+        float xEyeOffsetMScreen = width / 2.0f;
+        float yEyeOffsetMScreen = height / 2.0f;
         
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLS; col++) {
                 float uTexture = col / (COLS - 1.0f);
                 float vTexture = row / (ROWS - 1.0f);
                 
-                float xTexture = uTexture * mWindow.width();
-                float yTexture = vTexture * mWindow.height();
+                float xTexture = uTexture * width;
+                float yTexture = vTexture * height;
                 
                 float xTextureEye = xTexture - xEyeOffsetMScreen;
                 float yTextureEye = yTexture - yEyeOffsetMScreen;
@@ -167,8 +136,8 @@ public:
                 
                 float xScreen = xTextureEye * textureToScreen + xEyeOffsetMScreen;
                 float yScreen = yTextureEye * textureToScreen + yEyeOffsetMScreen;
-                float uScreen = xScreen / mWindow.width();
-                float vScreen = yScreen / mWindow.height();
+                float uScreen = xScreen / width;
+                float vScreen = yScreen / height;
                 
                 vertexData[(vertexOffset + 0)] = (2.0f * uScreen - 1.0f) * scale;
                 
@@ -178,14 +147,12 @@ public:
                 vertexData[(vertexOffset + 3)] = uTexture;
                 vertexData[(vertexOffset + 4)] = vTexture;
                 
-                cout << "(" << vertexData[(vertexOffset + 0)] << ":" << vertexData[(vertexOffset + 1)] << "), (" << vertexData[(vertexOffset + 3)] << ":" << vertexData[(vertexOffset + 4)] << ")" << endl;
+//                cout << "(" << vertexData[(vertexOffset + 0)] << ":" << vertexData[(vertexOffset + 1)] << "), (" << vertexData[(vertexOffset + 3)] << ":" << vertexData[(vertexOffset + 4)] << ")" << endl;
                 
                 vertexOffset += 5;
             }
         }
         
-        nIndices = ROWS * COLS * 2;
-        GLuint indexData[nIndices];
         int indexOffset = 0;
         vertexOffset = 0;
         for (int row = 0; row < (ROWS - 1); row++) {
@@ -206,23 +173,23 @@ public:
             }
             vertexOffset += ROWS;
         }
-        
-        GLuint bufferIds[2];
-        glGenBuffers(2, bufferIds);
-        mArrayBufferId = bufferIds[0];
-        mElementBufferId = bufferIds[1];
-        
-        glBindBuffer(GL_ARRAY_BUFFER, mArrayBufferId);
-        glBufferData(GL_ARRAY_BUFFER, ROWS * COLS * 5 * sizeof(GLfloat), vertexData, GL_STATIC_DRAW);
-        
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mElementBufferId);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, nIndices * sizeof(GLuint), indexData, GL_STATIC_DRAW);
-        
-        // unbind
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
     
+    GLfloat* getVertexData() {
+        return vertexData;
+    }
+    
+    int getVertexDataLength() {
+        return ROWS * COLS * 5;
+    }
+    
+    GLuint* getIndexData() {
+        return indexData;
+    }
+    
+    int getIndexDataLength() {
+        return ROWS * COLS * 2;
+    }
 };
 
 /*-----------------------------------------------------------------------------
@@ -230,38 +197,64 @@ public:
  *-----------------------------------------------------------------------------*/
 const char * vert = GLSL(120, 
   
-  attribute vec4 position;
-  attribute vec4 color;
-  attribute vec2 textureCoord;
+    attribute vec4 position;
+    attribute vec4 color;
+    attribute vec2 textureCoord;
 
-  varying vec4 dstColor;
-  varying vec2 dstTextureCoord;
+    varying vec4 dstColor;
+    varying vec2 dstTextureCoord;
 
-  uniform mat4 model;
-  uniform mat4 view;                 //<-- 4x4 Transformation Matrices
-  uniform mat4 projection;
-  uniform float textureCoordScale;
+    uniform mat4 model;
+    uniform mat4 view;                 //<-- 4x4 Transformation Matrices
+    uniform mat4 projection;
+    uniform float textureCoordScale;
 
-  void main(){
-    dstColor = color;
-    gl_Position = projection * view * model * position;   //<-- Apply transformation
-  }
-
+    void main(){
+        dstColor = color;
+        gl_Position = projection * view * model * position;   //<-- Apply transformation
+    }
 );
 
 const char * frag = GLSL(120,
   
-  varying vec4 dstColor;
-  varying vec2 dstTextureCoord;
+    varying vec4 dstColor;
+    varying vec2 dstTextureCoord;
                          
-  uniform sampler2D textureSampler;
+    uniform sampler2D textureSampler;
    
-  void main(){
-      gl_FragColor = dstColor;
-  }
-
+    void main(){
+        gl_FragColor = dstColor;
+    }
 );
 
+/*-----------------------------------------------------------------------------
+ *  DISTORTION SHADER CODE
+ *-----------------------------------------------------------------------------*/
+const char * distortVert = GLSL(120,
+                                
+    attribute vec2 position;
+    attribute float vignette;
+    attribute vec2 textureCoordinate;                   //<-- Texture Coordinate Attribute
+                                
+    varying vec2 texCoord;                              //<-- To be passed to fragment shader
+                                
+    void main(void){
+        texCoord = textureCoordinate;
+                                    
+        gl_Position = vec4(position, 0, 1);
+    }
+);
+
+const char * distortFrag = GLSL(120,
+                                
+    varying vec2 texCoord;                            //<-- coordinate passed in from vertex shader
+                                
+    uniform sampler2D texture;                        //<-- The texture itself
+                                
+    void main(void){
+        gl_FragColor =  texture2D( texture, texCoord ); //<-- look up the coordinate
+    }
+);
 
 /*-----------------------------------------------------------------------------
  *  CREATE A VERTEX OBJECT
@@ -271,25 +264,41 @@ struct Vertex{
   glm::vec4 color;
 };
 
-
 /*-----------------------------------------------------------------------------
  *  OUR APP
  *-----------------------------------------------------------------------------*/
 struct MyApp : public App{
     
     /*-----------------------------------------------------------------------------
+     *  WINDOW SIZE
+     *-----------------------------------------------------------------------------*/
+    int width = 1280, height = 960;
+    
+    /*-----------------------------------------------------------------------------
      *  DISTORTION PARAM
      *-----------------------------------------------------------------------------*/
-    GLint mOriginalFramebufferId[1];
-    GLint mViewport[4];
-    GLint mRenderbufferId = -1, mTextureId = -1, mFramebufferId = -1;
-    bool mProjectionChanged = true;
     DistortionMesh mDistortionMesh;
-
+    
+    Shader * distortShader;
+    //ID of Vertex Attribute
+    GLuint distortPositionID, distortTextureCoordinateID, distortTextureSamplerID;
+    
+    //A buffer ID
+    GLuint distortBufferID, distortElementID;                   //<-- add an elementID
+    //An array ID
+    GLuint distortArrayID;
+    
+    GLint mOriginalFramebufferId[1];
+    GLuint mRenderbufferId = 0, mTextureId = 0, mFramebufferId = 0;
+    
+    
+    /*-----------------------------------------------------------------------------
+     *  CUSTOM PARAM
+     *-----------------------------------------------------------------------------*/
     Shader * shader;
     
     //ID of Vertex Attribute
-    GLuint positionID, normalID, colorID;
+    GLuint positionID, colorID;
 
     //A buffer ID
     GLuint bufferID, elementID;                   //<-- add an elementID
@@ -313,7 +322,68 @@ struct MyApp : public App{
     }
     
     void initDistortion() {
-        mDistortionMesh = DistortionMesh(mWindow);
+        /*-----------------------------------------------------------------------------
+         *  Create Shader
+         *-----------------------------------------------------------------------------*/
+        distortShader = new Shader( distortVert, distortFrag );
+        
+        mDistortionMesh = DistortionMesh(width, height);
+        
+        GLfloat* vertexData = mDistortionMesh.getVertexData();
+        int vertexDataLength = mDistortionMesh.getVertexDataLength();
+        
+        GLuint* indexData = mDistortionMesh.getIndexData();
+        int indexDataLength = mDistortionMesh.getIndexDataLength();
+        
+        /*-----------------------------------------------------------------------------
+         *  Get Attribute Locations
+         *-----------------------------------------------------------------------------*/
+        distortPositionID = glGetAttribLocation(distortShader -> id(), "position");
+        checkGlError("initDistortion: glGetAttribLocation position");
+        
+        distortTextureCoordinateID = glGetAttribLocation( distortShader->id(), "textureCoordinate");
+        checkGlError("initDistortion: glGetAttribLocation textureCoordinate");
+        
+        distortTextureSamplerID = glGetUniformLocation(distortShader->id(), "texture");
+        checkGlError("initDistortion: glGetUniformLocation texture");
+        
+        /*-----------------------------------------------------------------------------
+         *  Generate Vertex Array Object
+         *-----------------------------------------------------------------------------*/
+        GENVERTEXARRAYS(1,&distortArrayID);
+        BINDVERTEXARRAY(distortArrayID);
+        
+        /*-----------------------------------------------------------------------------
+         *  Generate Vertex Buffer Object
+         *-----------------------------------------------------------------------------*/
+        glGenBuffers(1, &distortBufferID);
+        glBindBuffer( GL_ARRAY_BUFFER, distortBufferID);
+        glBufferData( GL_ARRAY_BUFFER,  vertexDataLength * sizeof(GLfloat), vertexData, GL_STATIC_DRAW );
+        
+        /*-----------------------------------------------------------------------------
+         *  CREATE THE ELEMENT ARRAY BUFFER OBJECT
+         *-----------------------------------------------------------------------------*/
+        glGenBuffers(1, &distortElementID);
+        glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, distortElementID);
+        glBufferData( GL_ELEMENT_ARRAY_BUFFER, indexDataLength * sizeof(GLuint), indexData, GL_STATIC_DRAW );
+        
+        /*-----------------------------------------------------------------------------
+         *  Enable Vertex Attributes and Point to them
+         *-----------------------------------------------------------------------------*/
+//        glEnableVertexAttribArray(distortPositionID);
+//        glEnableVertexAttribArray(distortTextureCoordinateID);
+//        glVertexAttribPointer( distortPositionID, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, 0);
+//        glVertexAttribPointer( distortTextureCoordinateID, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (void*) (sizeof(float)* 3) );
+        
+        setupRenderTextureAndRenderbuffer(width, height);
+        
+        /*-----------------------------------------------------------------------------
+         *  Unbind Vertex Array Object and the Vertex Array Buffer
+         *-----------------------------------------------------------------------------*/
+        BINDVERTEXARRAY(0);
+        glBindBuffer( GL_ARRAY_BUFFER, 0 );
+        
+        distortShader->unbind();
     }
 
     void init() {
@@ -404,53 +474,81 @@ struct MyApp : public App{
         BINDVERTEXARRAY(0);
         glBindBuffer( GL_ARRAY_BUFFER, 0);
         glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0);
+        
+        shader->unbind();
     }
     
     void beforeDrawFrameDistortion() {
         glGetIntegerv(GL_FRAMEBUFFER_BINDING, mOriginalFramebufferId);  // 36006
-        glGetIntegerv(GL_FRAMEBUFFER, &mFramebufferId);
+//        cout << "beforeDrawFrameDistortion: mOriginalFramebufferId->" << mOriginalFramebufferId[0] << endl;
+        glBindFramebuffer(GL_FRAMEBUFFER, mFramebufferId);
+//        cout << "beforeDrawFrameDistortion: mFramebufferId->" << mFramebufferId << endl;
     }
     
     void afterDrawFrameDistortion() {
         glBindFramebuffer(GL_FRAMEBUFFER, mOriginalFramebufferId[0]);
-        glViewport(0, 0, mWindow.width(), mWindow.height());
+        glViewport(0, 0, width, height);
+        
+        glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
+        distortShader->bind();
+        renderDistortionMesh();
+        
+        //4) unbind resources
+        //4.1) unbind attributes
+        glDisableVertexAttribArray(distortPositionID);
+        glDisableVertexAttribArray(distortTextureCoordinateID);
+        //4.2) unbind programs and buffers
+        glUseProgram(GL_FALSE);
+        glBindBuffer(GL_ARRAY_BUFFER, GL_FALSE); //GL_FALSE?
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_FALSE);
+        
+        distortShader->unbind();
     }
     
     GLuint setupRenderTextureAndRenderbuffer(int width, int height) {
+        if (mTextureId != 0) {
+            cout << "setupRenderTextureAndRenderbuffer: error mTextureId" << endl;
+        }
+        if (mRenderbufferId != 0) {
+            cout << "setupRenderTextureAndRenderbuffer: error mRenderbufferId" << endl;
+        }
+        if (mFramebufferId != 0) {
+            cout << "setupRenderTextureAndRenderbuffer: error mFramebufferId" << endl;
+        }
+        
         mTextureId = createTexture(width, height);
         checkGlError("setupRenderTextureAndRenderbuffer: create texture");
         
-        GLuint renderbufferIds[1];
-        glGenRenderbuffers(1, renderbufferIds);
-        glBindRenderbuffer(GL_RENDERBUFFER, renderbufferIds[0]);
+        glGenRenderbuffers(1, &mRenderbufferId);
+        glBindRenderbuffer(GL_RENDERBUFFER, mRenderbufferId);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, width, height);
         
-        mRenderbufferId = renderbufferIds[0];
         checkGlError("setupRenderTextureAndRenderbuffer: create renderbuffer");
+        cout << "setupRenderTextureAndRenderbuffer: mRenderbufferId->" << mRenderbufferId << endl;
         
-        GLuint framebufferIds[1];
-        glGenFramebuffers(1, framebufferIds);
-        glBindFramebuffer(GL_FRAMEBUFFER, framebufferIds[0]);
-        mFramebufferId = framebufferIds[0];
-        
+        glGenFramebuffers(1, &mFramebufferId);
+        glBindFramebuffer(GL_FRAMEBUFFER, mFramebufferId);
+        cout << "setupRenderTextureAndRenderbuffer: mFramebufferId->" << mFramebufferId << endl;
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextureId, 0);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, renderbufferIds[0]);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mRenderbufferId);
         
         int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
         if (status != GL_FRAMEBUFFER_COMPLETE) {
             cout << "Framebuffer is not complete: " << status << endl;
         }
         
+        // unbind framebuffer
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         
-        return framebufferIds[0];
+        return mFramebufferId;
     }
     
     GLuint createTexture(int width, int height) {
-        GLuint textureIds[1];
-        glGenTextures(1, textureIds);
+        glGenTextures(1, &mTextureId);
         
-        glBindTexture(GL_TEXTURE_2D, textureIds[0]);
+        glBindTexture(GL_TEXTURE_2D, mTextureId);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -461,10 +559,31 @@ struct MyApp : public App{
         
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, NULL);
         
-        return textureIds[0];
+        return mTextureId;
+    }
+    
+    void renderDistortionMesh() {
+        glBindBuffer(GL_ARRAY_BUFFER, distortArrayID);
+        
+        glVertexAttribPointer( distortPositionID, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, 0);
+        glEnableVertexAttribArray(distortPositionID);
+        
+        glVertexAttribPointer( distortTextureCoordinateID, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (void*) (sizeof(float)* 3) );
+        glEnableVertexAttribArray(distortTextureCoordinateID);
+        
+        glActiveTexture(GL_TEXTURE0);
+//        cout << "renderDistortionMesh: mTextureId->" << mTextureId << endl;
+        glBindTexture(GL_TEXTURE_2D, mTextureId);
+        glUniform1i(distortTextureSamplerID, 0);
+        
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, distortElementID);
+        
+        glDrawElements(GL_TRIANGLE_STRIP, mDistortionMesh.getIndexDataLength(), GL_UNSIGNED_INT, 0);
     }
     
     void onDrawFrameCustom() {
+        shader->bind();
+        
         static float time = 0.0;
         time += .01;
         
@@ -477,43 +596,21 @@ struct MyApp : public App{
         glUniformMatrix4fv( projectionID, 1, GL_FALSE, glm::value_ptr(proj) );
         
         glm::mat4 model = glm::rotate( glm::mat4(), time, glm::vec3(0,1,0) );
-        // glm::mat4 model = glm::rotate( glm::mat4(), 0.0f, glm::vec3(0,1,0) );
-        
-        // glm::mat4 translation =  glm::translate( glm::mat4(), glm::vec3(0,0,0) );
-        // glm::mat4 rotation =  glm::rotate( glm::mat4(), 0.0f, glm::vec3(0,1,0) );
-        // glm::mat4 scale = glm::scale( glm::mat4(), glm::vec3(1) );
-        // //ORDER MATTERS!
-        // glm::mat4 model = translation * rotation * scale;
         
         glUniformMatrix4fv( modelID, 1, GL_FALSE, glm::value_ptr(model) );
         
-        //glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, elementID);
         glDrawElements(GL_QUADS, 24, GL_UNSIGNED_BYTE, 0);
         
         BINDVERTEXARRAY(0);
-
-    }
-    
-    void onProjectionChanged() {
-        float zNear = 0.1f, zFar = -10.f;
         
-//        mDistortionMesh =
+        shader->unbind();
     }
 
     void onDraw() {
-        if (mProjectionChanged) {
-            
-            mProjectionChanged = false;
-        }
-        
         beforeDrawFrameDistortion();
-
         onDrawFrameCustom();
-        
         afterDrawFrameDistortion();
-  
     }
-
 };
 
 

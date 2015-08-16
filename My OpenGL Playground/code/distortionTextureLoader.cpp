@@ -285,16 +285,15 @@ struct MyApp : App {
          *  Unbind texture
          *-----------------------------------------------------------------------------*/
         glBindTexture(GL_TEXTURE_2D, 0);
-
     }
 
     void onDraw(){
-
+        cout << mWindow.width() << ":" << mWindow.height() << endl;
         glUseProgram( shader->id() );          //<-- 1. Bind Shader
         glBindTexture( GL_TEXTURE_2D, tID );   //<-- 2. Bind Texture
 
         BINDVERTEXARRAY(arrayID);            //<-- 3. Bind VAO
-      
+
         glDrawElements(GL_TRIANGLE_STRIP, ROWS * COLS * 2, GL_UNSIGNED_INT, 0);
         BINDVERTEXARRAY(0);                  //<-- 5. Unbind the VAO
 
