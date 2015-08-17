@@ -485,12 +485,31 @@ struct MyApp : public App{
 //        cout << "beforeDrawFrameDistortion: mFramebufferId->" << mFramebufferId << endl;
     }
     
+    void renderDistortionMesh() {
+        glBindBuffer(GL_ARRAY_BUFFER, distortArrayID);
+        
+        glVertexAttribPointer( distortPositionID, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, 0);
+        glEnableVertexAttribArray(distortPositionID);
+        
+        glVertexAttribPointer( distortTextureCoordinateID, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (void*) (sizeof(float)* 3) );
+        glEnableVertexAttribArray(distortTextureCoordinateID);
+        
+        glActiveTexture(GL_TEXTURE0);
+        //        cout << "renderDistortionMesh: mTextureId->" << mTextureId << endl;
+        glBindTexture(GL_TEXTURE_2D, mTextureId);
+        glUniform1i(distortTextureSamplerID, 0);
+        
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, distortElementID);
+        
+        glDrawElements(GL_TRIANGLE_STRIP, mDistortionMesh.getIndexDataLength(), GL_UNSIGNED_INT, 0);
+    }
+    
     void afterDrawFrameDistortion() {
         glBindFramebuffer(GL_FRAMEBUFFER, mOriginalFramebufferId[0]);
         glViewport(0, 0, width, height);
         
-        glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//        glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+//        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         distortShader->bind();
         renderDistortionMesh();
@@ -521,9 +540,10 @@ struct MyApp : public App{
         mTextureId = createTexture(width, height);
         checkGlError("setupRenderTextureAndRenderbuffer: create texture");
         
+        // The depth buffer
         glGenRenderbuffers(1, &mRenderbufferId);
         glBindRenderbuffer(GL_RENDERBUFFER, mRenderbufferId);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, width, height);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
         
         checkGlError("setupRenderTextureAndRenderbuffer: create renderbuffer");
         cout << "setupRenderTextureAndRenderbuffer: mRenderbufferId->" << mRenderbufferId << endl;
@@ -531,8 +551,14 @@ struct MyApp : public App{
         glGenFramebuffers(1, &mFramebufferId);
         glBindFramebuffer(GL_FRAMEBUFFER, mFramebufferId);
         cout << "setupRenderTextureAndRenderbuffer: mFramebufferId->" << mFramebufferId << endl;
+        
+        // Set "renderedTexture" as our colour attachement #0
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextureId, 0);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mRenderbufferId);
+        
+        // Set the list of draw buffers.
+//        GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
+//        glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
         
         int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
         if (status != GL_FRAMEBUFFER_COMPLETE) {
@@ -557,28 +583,9 @@ struct MyApp : public App{
         
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, NULL);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
         
         return mTextureId;
-    }
-    
-    void renderDistortionMesh() {
-        glBindBuffer(GL_ARRAY_BUFFER, distortArrayID);
-        
-        glVertexAttribPointer( distortPositionID, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, 0);
-        glEnableVertexAttribArray(distortPositionID);
-        
-        glVertexAttribPointer( distortTextureCoordinateID, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (void*) (sizeof(float)* 3) );
-        glEnableVertexAttribArray(distortTextureCoordinateID);
-        
-        glActiveTexture(GL_TEXTURE0);
-//        cout << "renderDistortionMesh: mTextureId->" << mTextureId << endl;
-        glBindTexture(GL_TEXTURE_2D, mTextureId);
-        glUniform1i(distortTextureSamplerID, 0);
-        
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, distortElementID);
-        
-        glDrawElements(GL_TRIANGLE_STRIP, mDistortionMesh.getIndexDataLength(), GL_UNSIGNED_INT, 0);
     }
     
     void onDrawFrameCustom() {

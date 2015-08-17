@@ -10,8 +10,9 @@
 /Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/glfw/tests/CMakeFiles/tearing.dir
 /Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/CMakeFiles/playground.dir
 /Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/glfw/tests/CMakeFiles/sharing.dir
-/Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/glfw/tests/CMakeFiles/peter.dir
 /Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/glfw/src/CMakeFiles/glfw.dir
+/Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/glfw/tests/CMakeFiles/peter.dir
+/Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/CMakeFiles/distortionReference.dir
 /Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/glfw/tests/CMakeFiles/modes.dir
 /Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/glfw/tests/CMakeFiles/iconify.dir
 /Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/glfw/tests/CMakeFiles/joysticks.dir
