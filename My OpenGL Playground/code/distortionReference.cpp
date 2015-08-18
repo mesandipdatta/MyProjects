@@ -115,8 +115,8 @@ struct Vertex3{
 
 int screenWidth = 800;
 int screenHeight = 600;
-int viewportWidth = screenWidth/2;
-int viewportHeight = screenHeight/2;
+int viewportWidth = screenWidth;
+int viewportHeight = screenHeight;
 
 float pxPerInch = 220;
 

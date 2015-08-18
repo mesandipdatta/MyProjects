@@ -20,3 +20,7 @@ My OpenGL Playground
             $ mkdir xcode
             $ cd xcode
             $ cmake -G "Xcode" ..
+
+#### Tutorial
+1. https://open.gl/introduction
+2. http://www.songho.ca/opengl/index.html

@@ -1,14 +1,15 @@
 /Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/CMakeFiles/ZERO_CHECK.dir
 /Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/CMakeFiles/ALL_BUILD.dir
+/Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/CMakeFiles/playground.dir
 /Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/glfw/CMakeFiles/uninstall.dir
 /Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/glfw/tests/CMakeFiles/windows.dir
+/Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/CMakeFiles/drawing.dir
 /Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/glfw/tests/CMakeFiles/clipboard.dir
 /Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/glfw/tests/CMakeFiles/title.dir
 /Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/glfw/tests/CMakeFiles/threads.dir
 /Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/CMakeFiles/distortion.dir
 /Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/glfw/tests/CMakeFiles/gamma.dir
 /Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/glfw/tests/CMakeFiles/tearing.dir
-/Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/CMakeFiles/playground.dir
 /Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/glfw/tests/CMakeFiles/sharing.dir
 /Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/glfw/src/CMakeFiles/glfw.dir
 /Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/glfw/tests/CMakeFiles/peter.dir

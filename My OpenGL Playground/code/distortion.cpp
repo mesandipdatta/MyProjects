@@ -288,7 +288,7 @@ struct MyApp : public App{
     //An array ID
     GLuint distortArrayID;
     
-    GLint mOriginalFramebufferId[1];
+    GLint mOriginalFramebufferId;
     GLuint mRenderbufferId = 0, mTextureId = 0, mFramebufferId = 0;
     
     
@@ -370,10 +370,10 @@ struct MyApp : public App{
         /*-----------------------------------------------------------------------------
          *  Enable Vertex Attributes and Point to them
          *-----------------------------------------------------------------------------*/
-//        glEnableVertexAttribArray(distortPositionID);
-//        glEnableVertexAttribArray(distortTextureCoordinateID);
-//        glVertexAttribPointer( distortPositionID, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, 0);
-//        glVertexAttribPointer( distortTextureCoordinateID, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (void*) (sizeof(float)* 3) );
+        glEnableVertexAttribArray(distortPositionID);
+        glEnableVertexAttribArray(distortTextureCoordinateID);
+        glVertexAttribPointer( distortPositionID, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, 0);
+        glVertexAttribPointer( distortTextureCoordinateID, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (void*) (sizeof(float)* 3) );
         
         setupRenderTextureAndRenderbuffer(width, height);
         
@@ -479,13 +479,15 @@ struct MyApp : public App{
     }
     
     void beforeDrawFrameDistortion() {
-        glGetIntegerv(GL_FRAMEBUFFER_BINDING, mOriginalFramebufferId);  // 36006
+        glGetIntegerv(GL_FRAMEBUFFER_BINDING, &mOriginalFramebufferId);  // 36006
 //        cout << "beforeDrawFrameDistortion: mOriginalFramebufferId->" << mOriginalFramebufferId[0] << endl;
         glBindFramebuffer(GL_FRAMEBUFFER, mFramebufferId);
 //        cout << "beforeDrawFrameDistortion: mFramebufferId->" << mFramebufferId << endl;
     }
     
     void renderDistortionMesh() {
+        distortShader->bind();
+        
         glBindBuffer(GL_ARRAY_BUFFER, distortArrayID);
         
         glVertexAttribPointer( distortPositionID, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, 0);
@@ -494,24 +496,28 @@ struct MyApp : public App{
         glVertexAttribPointer( distortTextureCoordinateID, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, (void*) (sizeof(float)* 3) );
         glEnableVertexAttribArray(distortTextureCoordinateID);
         
-        glActiveTexture(GL_TEXTURE0);
+//        glActiveTexture(GL_TEXTURE0);
         //        cout << "renderDistortionMesh: mTextureId->" << mTextureId << endl;
         glBindTexture(GL_TEXTURE_2D, mTextureId);
+        
+//        BINDVERTEXARRAY(distortArrayID);
+        
         glUniform1i(distortTextureSamplerID, 0);
         
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, distortElementID);
         
         glDrawElements(GL_TRIANGLE_STRIP, mDistortionMesh.getIndexDataLength(), GL_UNSIGNED_INT, 0);
+        
+        distortShader->unbind();
     }
     
     void afterDrawFrameDistortion() {
-        glBindFramebuffer(GL_FRAMEBUFFER, mOriginalFramebufferId[0]);
+        glBindFramebuffer(GL_FRAMEBUFFER, mOriginalFramebufferId);
         glViewport(0, 0, width, height);
         
 //        glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 //        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
-        distortShader->bind();
         renderDistortionMesh();
         
         //4) unbind resources
@@ -522,8 +528,6 @@ struct MyApp : public App{
         glUseProgram(GL_FALSE);
         glBindBuffer(GL_ARRAY_BUFFER, GL_FALSE); //GL_FALSE?
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_FALSE);
-        
-        distortShader->unbind();
     }
     
     GLuint setupRenderTextureAndRenderbuffer(int width, int height) {
@@ -583,7 +587,16 @@ struct MyApp : public App{
         
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, NULL);
+        
+        //Mipmaps are good -- the regenerate the texture at various scales
+        // and are necessary to avoid black screen if texParameters below are not set
+        glGenerateMipmap(GL_TEXTURE_2D);
+        
+        /*-----------------------------------------------------------------------------
+         *  Unbind texture
+         *-----------------------------------------------------------------------------*/
+        glBindTexture(GL_TEXTURE_2D, 0);
         
         return mTextureId;
     }
@@ -614,9 +627,9 @@ struct MyApp : public App{
     }
 
     void onDraw() {
-        beforeDrawFrameDistortion();
+//        beforeDrawFrameDistortion();
         onDrawFrameCustom();
-        afterDrawFrameDistortion();
+//        afterDrawFrameDistortion();
     }
 };
 
