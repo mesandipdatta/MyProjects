@@ -1,5 +1,6 @@
 /Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/CMakeFiles/ZERO_CHECK.dir
 /Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/CMakeFiles/ALL_BUILD.dir
+/Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/CMakeFiles/textures.dir
 /Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/CMakeFiles/playground.dir
 /Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/glfw/CMakeFiles/uninstall.dir
 /Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/glfw/tests/CMakeFiles/windows.dir
