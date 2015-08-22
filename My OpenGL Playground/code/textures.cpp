@@ -64,11 +64,12 @@ GLSL(120,
          float factor = (sin(time * 3.0) + 1.0) / 2.0;
 //         vec4 colFlower = texture2D(texFlower, Texcoord);
 //         vec4 colBox = texture2D(texBox, Texcoord);
-         if (Texcoord.y > 0.5) {
-             gl_FragColor = texture2D(texFlower, Texcoord);
-         } else {
-             gl_FragColor = texture2D(texFlower, vec2(Texcoord.x + sin(Texcoord.y * 60.0 + time) / 30.0, 1.0 - Texcoord.y));
-         }
+//         if (Texcoord.y > 0.5) {
+//             gl_FragColor = texture2D(texFlower, Texcoord);
+//         } else {
+//             gl_FragColor = texture2D(texFlower, vec2(Texcoord.x + sin(Texcoord.y * 60.0 + time) / 30.0, 1.0 - Texcoord.y));
+//         }
+         gl_FragColor = texture2D(texFlower, Texcoord);
      }
 );
 
@@ -123,6 +124,7 @@ struct MyApp : public App{
         glBindTexture(GL_TEXTURE_2D, textures[0]);
         Bitmap img("resources/flower.bmp");
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.width, img.height, 0, GL_RGB, GL_UNSIGNED_BYTE, img.pixels.data());
+        // specifying the texture unit
         glUniform1i(glGetUniformLocation(shader->id(), "texFlower"), 0);
         
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
