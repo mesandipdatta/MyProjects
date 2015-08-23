@@ -1,4 +1,4 @@
-# Install script for directory: /Users/yusun/Repositories/MyProjects/My OpenGL Playground/glfw/tests
+# Install script for directory: /Users/Sun/Repositories/MyProjects/My OpenGL Playground/glfw/tests
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

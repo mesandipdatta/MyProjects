@@ -42,9 +42,13 @@ GLSL(120,
      
      varying vec2 Texcoord;
      varying vec3 Color;
+     
+     uniform mat4 model;
+     uniform mat4 view;
+     uniform mat4 proj;
 
      void main(){
-         gl_Position = vec4(position.x, -position.y, 0.0, 1.0);
+         gl_Position = proj * view * model * vec4(position.x, -position.y, 0.0, 1.0);
          Color = color;
          Texcoord = texcoord;
      }
@@ -89,10 +93,10 @@ struct MyApp : public App{
         
         float vertices[] = {
             //  Position      Color             Texcoords
-            -1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f, // Top-left
-             1.0f,  1.0f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f, // Top-right
-             1.0f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f, // Bottom-right
-            -1.0f, -1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  1.0f  // Bottom-left
+            -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f, // Top-left
+             0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f, // Top-right
+             0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f, // Bottom-right
+            -0.5f, -0.5f,  1.0f,  1.0f,  1.0f,  0.0f,  1.0f  // Bottom-left
         };
         
         GLuint vao;
@@ -135,6 +139,22 @@ struct MyApp : public App{
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glGenerateMipmap(GL_TEXTURE_2D);
         
+//        glm::mat4 trans;
+//        trans = glm::rotate(trans, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+//        GLint uniTrans = glGetUniformLocation(shader->id(), "trans");
+//        glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(trans));
+        
+//        glm::vec4 result = trans * glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+//        printf("%f, %f, %f\n", result.x, result.y, result.z);
+        
+        glm::mat4 view = glm::lookAt(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        GLint uniView = glGetUniformLocation(shader->id(), "view");
+        glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
+        
+//        glm::mat4 proj = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 10.0f);
+//        GLint uniProj = glGetUniformLocation(shader->id(), "proj");
+//        glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(proj));
+        
 //        glActiveTexture(GL_TEXTURE1);
 //        glBindTexture(GL_TEXTURE_2D, textures[1]);
 //        Bitmap img2("resources/box.bmp");
@@ -159,6 +179,15 @@ struct MyApp : public App{
         
         shader->bind();
         BINDVERTEXARRAY(arrayID);
+        
+        glm::mat4 model;
+        model = glm::rotate(model, glm::radians(180.0f) * time, glm::vec3(1.0f, 0.0f, 0.0f));
+        GLint uniTrans = glGetUniformLocation(shader->id(), "model");
+        glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(model));
+        
+        glm::mat4 proj = glm::perspective(glm::radians(45.0f) * time, 800.0f / 600.0f, 0.1f, 10.0f);
+        GLint uniProj = glGetUniformLocation(shader->id(), "proj");
+        glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(proj));
         
         GLint uniTime = glGetUniformLocation(shader->id(), "time");
         glUniform1f(uniTime, time);
