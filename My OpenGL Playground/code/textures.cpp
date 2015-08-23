@@ -3,7 +3,7 @@
  *
  *       Filename:  textures.cpp
  *
- *    Description:  https://open.gl/drawing
+ *    Description:  https://open.gl/textures
  *
  *        Version:  1.0
  *        Created:  08/18/2015 23:30:28

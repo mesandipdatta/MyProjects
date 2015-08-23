@@ -23,5 +23,6 @@
 /Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/glfw/tests/CMakeFiles/fsaa.dir
 /Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/glfw/tests/CMakeFiles/defaults.dir
 /Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/CMakeFiles/distortionTextureLoader.dir
+/Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/CMakeFiles/thread.dir
 /Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/glfw/tests/CMakeFiles/reopen.dir
 /Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/glfw/tests/CMakeFiles/glfwinfo.dir
