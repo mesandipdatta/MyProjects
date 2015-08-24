@@ -9,7 +9,6 @@
 /Users/Sun/Repositories/MyProjects/My\ OpenGL\ Playground/glfw/src/glfwConfigVersion.cmake.in\
 /Users/Sun/Repositories/MyProjects/My\ OpenGL\ Playground/glfw/src/glfw_config.h.in\
 /Users/Sun/Repositories/MyProjects/My\ OpenGL\ Playground/glfw/tests/CMakeLists.txt\
-/usr/local/share/cmake-3.3/Modules/CMakeConfigurableFile.in\
 /usr/local/share/cmake-3.3/Modules/CMakeParseArguments.cmake\
 /usr/local/share/cmake-3.3/Modules/CheckIncludeFiles.cmake\
 /usr/local/share/cmake-3.3/Modules/CheckLibraryExists.cmake\

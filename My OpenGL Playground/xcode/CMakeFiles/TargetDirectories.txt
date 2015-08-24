@@ -2,6 +2,7 @@
 /Users/Sun/Repositories/MyProjects/My OpenGL Playground/xcode/CMakeFiles/ALL_BUILD.dir
 /Users/Sun/Repositories/MyProjects/My OpenGL Playground/xcode/CMakeFiles/textures.dir
 /Users/Sun/Repositories/MyProjects/My OpenGL Playground/xcode/CMakeFiles/playground.dir
+/Users/Sun/Repositories/MyProjects/My OpenGL Playground/xcode/CMakeFiles/framebuffers.dir
 /Users/Sun/Repositories/MyProjects/My OpenGL Playground/xcode/glfw/CMakeFiles/uninstall.dir
 /Users/Sun/Repositories/MyProjects/My OpenGL Playground/xcode/glfw/tests/CMakeFiles/windows.dir
 /Users/Sun/Repositories/MyProjects/My OpenGL Playground/xcode/CMakeFiles/drawing.dir
