@@ -36,15 +36,19 @@ using namespace std;
 const char * vert =
 GLSL(120,
                          
-     attribute vec2 position;
+     attribute vec3 position;
      attribute vec3 color;
      attribute vec2 texcoord;
      
      varying vec2 Texcoord;
      varying vec3 Color;
+     
+     uniform mat4 model;
+     uniform mat4 view;
+     uniform mat4 proj;
 
      void main(){
-         gl_Position = vec4(position.x, -position.y, 0.0, 1.0);
+         gl_Position = proj * view * model * vec4(position.x, -position.y, position.z, 1.0);
          Color = color;
          Texcoord = texcoord;
      }
@@ -61,7 +65,7 @@ GLSL(120,
      uniform float time;
                          
      void main(){
-         float factor = (sin(time * 3.0) + 1.0) / 2.0;
+//         float factor = (sin(time * 3.0) + 1.0) / 2.0;
 //         vec4 colFlower = texture2D(texFlower, Texcoord);
 //         vec4 colBox = texture2D(texBox, Texcoord);
 //         if (Texcoord.y > 0.5) {
@@ -87,12 +91,56 @@ struct MyApp : public App{
     void init(){
         shader = new Shader( vert, frag );
         
-        float vertices[] = {
-            //  Position      Color             Texcoords
-            -1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f, // Top-left
-             1.0f,  1.0f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f, // Top-right
-             1.0f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f, // Bottom-right
-            -1.0f, -1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  1.0f  // Bottom-left
+//        float vertices[] = {
+//            //  Position      Color             Texcoords
+//            -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f, // Top-left
+//             0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f, // Top-right
+//             0.5f, -0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f, // Bottom-right
+//            -0.5f, -0.5f,  1.0f,  1.0f,  1.0f,  0.0f,  1.0f  // Bottom-left
+//        };
+        
+        GLfloat vertices[] = {
+            -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+            0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+            0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+            0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+            -0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+            
+            -0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+            0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+            0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+            0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+            -0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+            -0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+            
+            -0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+            -0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+            -0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+            -0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+            
+            0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+            0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+            0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+            0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+            0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+            0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+            
+            -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+            0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+            0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+            0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+            -0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+            -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+            
+            -0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+            0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+            0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+            0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+            -0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
+            -0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f
         };
         
         GLuint vao;
@@ -106,16 +154,16 @@ struct MyApp : public App{
         glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
         
         GLint posAttrib = glGetAttribLocation(shader->id(), "position");
-        glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 7*sizeof(float), 0);
+        glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), 0);
         glEnableVertexAttribArray(posAttrib);
         
         GLint colAttrib = glGetAttribLocation(shader->id(), "color");
         glEnableVertexAttribArray(colAttrib);
-        glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 7*sizeof(float), (void*)(2*sizeof(float)));
+        glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
         
         GLint texAttrib = glGetAttribLocation(shader->id(), "texcoord");
         glEnableVertexAttribArray(texAttrib);
-        glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 7*sizeof(float), (void*)(5*sizeof(float)));
+        glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
         
         GLuint textures[2];
         glGenTextures(2, textures);
@@ -135,6 +183,22 @@ struct MyApp : public App{
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glGenerateMipmap(GL_TEXTURE_2D);
         
+//        glm::mat4 trans;
+//        trans = glm::rotate(trans, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+//        GLint uniTrans = glGetUniformLocation(shader->id(), "trans");
+//        glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(trans));
+        
+//        glm::vec4 result = trans * glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+//        printf("%f, %f, %f\n", result.x, result.y, result.z);
+        
+        glm::mat4 view = glm::lookAt(glm::vec3(1.5f, 1.5f, 1.5f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        GLint uniView = glGetUniformLocation(shader->id(), "view");
+        glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
+        
+        glm::mat4 proj = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 1.0f, 10.0f);
+        GLint uniProj = glGetUniformLocation(shader->id(), "proj");
+        glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(proj));
+        
 //        glActiveTexture(GL_TEXTURE1);
 //        glBindTexture(GL_TEXTURE_2D, textures[1]);
 //        Bitmap img2("resources/box.bmp");
@@ -148,6 +212,32 @@ struct MyApp : public App{
 //        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 //        glGenerateMipmap(GL_TEXTURE_2D);
         
+//        glDisable(GL_DEPTH_TEST);
+        
+//        GLuint frameBuffer;
+//        glGenFramebuffers(1, &frameBuffer);
+//        glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+//        glDeleteFramebuffers(1, &frameBuffer);
+//        
+//        GLuint texColorBuffer;
+//        glGenTextures(1, &texColorBuffer);
+//        glBindTexture(GL_TEXTURE_2D, texColorBuffer);
+//        
+//        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 800, 600, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+//        
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//        
+//        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texColorBuffer, 0);
+//        
+//        GLuint rboDepthStencil;
+//        glGenRenderbuffers(1, &rboDepthStencil);
+//        glBindRenderbuffer(GL_RENDERBUFFER, rboDepthStencil);
+//        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 800, 600);
+//        
+//        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rboDepthStencil);
+        
+        
         BINDVERTEXARRAY(0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         shader->unbind();
@@ -160,10 +250,16 @@ struct MyApp : public App{
         shader->bind();
         BINDVERTEXARRAY(arrayID);
         
+        glm::mat4 model;
+        model = glm::rotate(model, glm::radians(180.0f) * time, glm::vec3(0.0f, 0.0f, 1.0f));
+        GLint uniModel = glGetUniformLocation(shader->id(), "model");
+        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+        
         GLint uniTime = glGetUniformLocation(shader->id(), "time");
         glUniform1f(uniTime, time);
         
-        glDrawArrays( GL_QUADS, 0, 4);
+//        glDrawArrays( GL_QUADS, 0, 4);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
         
         BINDVERTEXARRAY(0);
     }
