@@ -1,4 +1,4 @@
-# Install script for directory: /Users/Sun/Repositories/MyProjects/My OpenGL Playground
+# Install script for directory: /Users/yusun/Repositories/MyProjects/My OpenGL Playground
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -29,7 +29,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/Users/Sun/Repositories/MyProjects/My OpenGL Playground/xcode/glfw/cmake_install.cmake")
+  include("/Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/glfw/cmake_install.cmake")
 
 endif()
 
@@ -41,5 +41,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/Users/Sun/Repositories/MyProjects/My OpenGL Playground/xcode/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/Users/yusun/Repositories/MyProjects/My OpenGL Playground/xcode/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

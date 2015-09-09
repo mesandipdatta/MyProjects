@@ -288,7 +288,7 @@ struct MyApp : App {
     }
 
     void onDraw(){
-        cout << mWindow.width() << ":" << mWindow.height() << endl;
+//        cout << mWindow.width() << ":" << mWindow.height() << endl;
         glUseProgram( shader->id() );          //<-- 1. Bind Shader
         glBindTexture( GL_TEXTURE_2D, tID );   //<-- 2. Bind Texture
 
