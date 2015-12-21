@@ -21,9 +21,10 @@ public class NumberWizard : MonoBehaviour {
 	{
 		max = 1000;
 		min = 1;
-		guess = 500;
+//		guess = 500;
+		NextGuess();
 
-		max = max + 1;
+//		max = max + 1;
 	}
 
 	public void GuessLower() {
@@ -38,7 +39,8 @@ public class NumberWizard : MonoBehaviour {
 
 	void NextGuess ()
 	{
-		guess = (min + max) / 2;
+//		guess = (min + max) / 2;
+		guess = Random.Range(min, max + 1);
 		text.text = guess.ToString();
 		maxGuessesAllowed = maxGuessesAllowed - 1;
 		if (maxGuessesAllowed <= 0) {
