@@ -79,6 +79,7 @@
 -define:UNITY_EDITOR_64
 -define:UNITY_EDITOR_OSX
 'Assets/Ball.cs'
+'Assets/CameraControl.cs'
 'Assets/START Pack/Scripts/ActionMaster2.cs'
 'Assets/START Pack/Scripts/OurScoreDisplayTest1.cs'
 -r:'/Applications/Unity/Unity.app/Contents/Frameworks/Mono/lib/mono/unity/System.Runtime.Serialization.dll'
